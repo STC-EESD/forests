@@ -1,10 +1,27 @@
 #!/bin/bash
 
-wget http://www.ccea-ccae.org/wp-content/uploads/2021/01/Canada_Ecozones_V5_map_kml_v20140218.zip
-wget http://www.ccea-ccae.org/wp-content/uploads/2021/01/Canada_Ecozones_V5b_15M_simplify.shp_v20140218.zip
+SHP_FILES=( \
+    "https://sis.agr.gc.ca/cansis/nsdb/ecostrat/zone/ecozone_shp.zip"         \
+    "https://sis.agr.gc.ca/cansis/nsdb/ecostrat/province/ecoprovince_shp.zip" \
+    "https://sis.agr.gc.ca/cansis/nsdb/ecostrat/region/ecoregion_shp.zip"     \
+    "https://sis.agr.gc.ca/cansis/nsdb/ecostrat/district/ecodistrict_shp.zip"
+    )
 
-unzip Canada_Ecozones_V5_map_kml_v20140218.zip           -d Canada_Ecozones_V5_map_kml_v20140218
-unzip Canada_Ecozones_V5b_15M_simplify.shp_v20140218.zip -d Canada_Ecozones_V5b_15M_simplify.shp_v20140218
+for tempzip in "${SHP_FILES[@]}"
+do
+    echo downloading: ${tempzip}
+    wget ${tempzip}
+done
 
-chmod -R ugo-w Canada*
+echo
+
+for tempzip in *.zip; do
+    echo unzipping: ${tempzip}
+    tempstem=`basename ${tempzip} .zip`
+    unzip ${tempzip} -d ${tempstem}
+done
+
+echo
+echo done
+echo
 
