@@ -55,11 +55,15 @@ def test_eeHansen(google_drive_folder):
     print("forestAreaByEcozone",forestAreaByEcozone);
 
     ##### ##### ##### ##### #####
-    classes       = ee.List.sequence(0,1);
+    classes       = ee.List.sequence(0,1).map(_numberToString);
     propertyNames = ['ECOZONE','ZONE_ID','ZONE_NAME','AREA','PERIMETER'];
-    outputFields  = ee.List(propertyNames).cat(classes).getInfo();
+    # outputFields  = str(ee.List(propertyNames).cat(classes).getInfo());
+    outputFields  = ['ECOZONE','ZONE_ID','ZONE_NAME','AREA','PERIMETER','0','1'];
 
-    ee.batch.Export.table.toDrive(
+    print("classes",     classes     );
+    print("outputFields",outputFields);
+
+    export_task = ee.batch.Export.table.toDrive(
         collection     = forestAreaByEcozone,
         description    = 'class_area_by_ecozone',
         folder         = google_drive_folder,
@@ -67,6 +71,7 @@ def test_eeHansen(google_drive_folder):
         fileFormat     = 'CSV',
         selectors      = outputFields
         );
+    export_task.start();
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     print( "\n########## " + thisFunctionName + "() exits ..." )
@@ -86,6 +91,9 @@ def maskS2clouds(image):
 def addNDVI(image):
   ndvi = image.normalizedDifference(['B8','B4']).rename('ndvi')
   return image.addBands(ndvi)
+
+def _numberToString(number):
+    return ee.String(number);
 
 def _getClassArea(item):
     areaDict = ee.Dictionary(item);
