@@ -59,14 +59,14 @@ def test_eeHansen(google_drive_folder):
     propertyNames = ['ECOZONE','ZONE_ID','ZONE_NAME','AREA','PERIMETER'];
     outputFields  = ee.List(propertyNames).cat(classes).getInfo();
 
-    # Export.table.toDrive(**{
-    #     collection: forestAreaByEcozone,
-    #     description: 'class_area_by_ecozone',
-    #     folder: google_drive_folder,
-    #     fileNamePrefix: 'class_area_by_ecozone',
-    #     fileFormat: 'CSV',
-    #     selectors: outputFields
-    #     });
+    ee.batch.Export.table.toDrive(
+        collection     = forestAreaByEcozone,
+        description    = 'class_area_by_ecozone',
+        folder         = google_drive_folder,
+        fileNamePrefix = 'class_area_by_ecozone',
+        fileFormat     = 'CSV',
+        selectors      = outputFields
+        );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     print( "\n########## " + thisFunctionName + "() exits ..." )
