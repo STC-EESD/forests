@@ -41,10 +41,16 @@ logging.basicConfig(filename='log.debug',level=logging.DEBUG)
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 from test_eeAuthenticate import test_eeAuthenticate
 from test_eeBatchExport  import test_eeBatchExport
+from test_eeHansen       import test_eeHansen
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 test_eeAuthenticate()
-test_eeBatchExport(
+
+# test_eeBatchExport(
+#     google_drive_folder = google_drive_folder
+#     )
+
+test_eeHansen(
     google_drive_folder = google_drive_folder
     )
 
