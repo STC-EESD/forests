@@ -25,10 +25,11 @@ require(reticulate);
 
 # source supporting R code
 code.files <- c(
+    "download-from-googledrive.R"
     # "getPyModule-ee.R",
     # "test-ee-Authenticate.R",
     # "test-ee-batch-export.R",
-    "test-googledrive.R"
+    # "test-googledrive.R"
     );
 
 for ( code.file in code.files ) {
@@ -63,8 +64,14 @@ cat(paste0("\n# n.cores = ",n.cores,"\n"));
 # # sleep for ten minutes
 # Sys.sleep( 10 * 60 );
 
-test.googledrive(
-    google.drive.folder = google.drive.folder
+download.from.googledrive(
+    google.drive.folder = google.drive.folder,
+    patterns = c(
+        "^treecover2000_area_by_ecozone.csv$",
+        "^canPopCentres",
+        "wonder woman",
+        "^class_area_by_ecozone"
+        )
     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
