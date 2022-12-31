@@ -34,7 +34,7 @@ stderrFile=${outputDIR}/stderr.py.`basename ${myPythonScript} .py`
 ${pythonBinDIR}/python ${myPythonScript} ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} > ${stdoutFile} 2> ${stderrFile}
 
 ##################################################
-sleep 600
+sleep 120
 
 ##################################################
 myRscript=${codeDIR}/main.R
