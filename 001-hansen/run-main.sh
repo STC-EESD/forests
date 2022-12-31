@@ -37,7 +37,7 @@ stderrFile=${outputDIR}/stderr.py.`basename ${myPythonScript} .py`
 # sleep 120
 
 ##################################################
-myRscript=${codeDIR}/main.R
+myRscript=${codeDIR}/main-download.R
 stdoutFile=${outputDIR}/stdout.R.`basename ${myRscript} .R`
 stderrFile=${outputDIR}/stderr.R.`basename ${myRscript} .R`
 R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
