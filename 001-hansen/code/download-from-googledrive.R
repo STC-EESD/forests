@@ -9,6 +9,12 @@ download.from.googledrive <- function(
     cat(paste0("\n",thisFunctionName,"() starts.\n\n"));
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    existing.filees <- as.character(unlist(sapply(
+        X   = patterns,
+        FUN = function(x) { return(list.files(pattern = x, ignore.case = TRUE)) }
+        )));
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     options(
         gargle_oauth_email = Sys.getenv("GARGLE_OAUTH_EMAIL"),
         gargle_oauth_cache = Sys.getenv("GARGLE_OAUTH_CACHE")
@@ -62,8 +68,12 @@ download.from.googledrive <- function(
             for ( row.index in seq(1,nrow(DF.temp)) ) {
                 temp.id   <- DF.temp[row.index,'id'  ];
                 temp.name <- DF.temp[row.index,'name'];
-                cat("\n# downloading: ( ID:",temp.id,")",temp.name,"\n");
-                googledrive::drive_download(file = googledrive::as_id(temp.id));
+                if ( temp.name %in% existing.filees ) {
+                    cat("\n# already exists: ( ID:",temp.id,")",temp.name," (did NOT download)\n");
+                } else {
+                    cat("\n# downloading: ( ID:",temp.id,")",temp.name,"\n");
+                    googledrive::drive_download(file = googledrive::as_id(temp.id));
+                    }
                 }
             }
         }

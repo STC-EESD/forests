@@ -68,9 +68,7 @@ download.from.googledrive(
     google.drive.folder = google.drive.folder,
     patterns = c(
         "^treecover2000_area_by_ecozone.csv$",
-        "^canPopCentres",
-        "wonder woman",
-        "^class_area_by_ecozone"
+        "^forest_loss_by_ecozone_year.csv$"
         )
     );
 
