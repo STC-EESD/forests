@@ -43,6 +43,7 @@ from test_eeAuthenticate import test_eeAuthenticate
 from test_eeBatchExport  import test_eeBatchExport
 from test_eeHansen       import test_eeHansen
 from hansen              import export_treecover2000
+from hansen              import export_forest_loss_by_ecozone_year
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 test_eeAuthenticate()
@@ -56,7 +57,13 @@ test_eeAuthenticate()
 #     )
 
 export_treecover2000(
-    google_drive_folder = google_drive_folder
+    google_drive_folder = google_drive_folder,
+    export_target       = "treecover2000_area_by_ecozone.csv"
+    )
+
+export_forest_loss_by_ecozone_year(
+    google_drive_folder = google_drive_folder,
+    export_target       = "forest_loss_by_ecozone_year.csv"
     )
 
 # ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
