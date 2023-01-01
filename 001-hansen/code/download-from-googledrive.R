@@ -69,7 +69,7 @@ download.from.googledrive <- function(
                 temp.id   <- DF.temp[row.index,'id'  ];
                 temp.name <- DF.temp[row.index,'name'];
                 if ( temp.name %in% existing.filees ) {
-                    cat("\n# already exists: ( ID:",temp.id,")",temp.name," (did NOT download)\n");
+                    cat("\n# download target already exists; did not download/overwrite: ( ID:",temp.id,")",temp.name,"\n");
                 } else {
                     cat("\n# downloading: ( ID:",temp.id,")",temp.name,"\n");
                     googledrive::drive_download(file = googledrive::as_id(temp.id));
