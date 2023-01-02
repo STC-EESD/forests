@@ -45,9 +45,13 @@ n.cores  <- ifelse(test = is.macOS, yes = 2, no = parallel::detectCores() - 1);
 cat(paste0("\n# n.cores = ",n.cores,"\n"));
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+nfi.data.directory <- file.path(data.directory,"2023-01-02.01");
+
 forest.loss.time.series(
-    CSV.treecover2000 = "treecover2000_area_by_ecozone.csv",
-    CSV.loss.by.year  = "forest_loss_by_ecozone_year.csv"
+    CSV.treecover2000  = "treecover2000_area_by_ecozone.csv",
+    CSV.loss.by.year   = "forest_loss_by_ecozone_year.csv",
+    CSV.nfi.standard   = file.path(nfi.data.directory,"NFI_T1_LC_AREA_en.csv"),
+    CSV.nfi.customized = file.path(nfi.data.directory,"nfi-customized-report-2023-01-02.csv")
     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
