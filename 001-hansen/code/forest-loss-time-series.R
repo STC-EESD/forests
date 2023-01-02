@@ -1,7 +1,8 @@
 
 forest.loss.time.series <- function(
     CSV.treecover2000 = "treecover2000_area_by_ecozone.csv",
-    CSV.loss.by.year  = "forest_loss_by_ecozone_year.csv"
+    CSV.loss.by.year  = "forest_loss_by_ecozone_year.csv",
+    colour.palette    = RColorBrewer::brewer.pal(name = "Dark2", n = 8)
     ) {
 
     thisFunctionName <- "forest.loss.time.series";
@@ -14,8 +15,52 @@ forest.loss.time.series <- function(
         CSV.loss.by.year  = CSV.loss.by.year
         );
 
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    group.01 <- c(
+        'Boreal Shield',
+        'Arctic Cordillera'
+        );
+
+    group.02 <- c(
+        'Atlantic Maritime',
+        'Boreal Plain',
+        'Montane Cordillera'
+        );
+
+    group.03 <- c(
+        'Boreal Cordillera',
+        'Hudson Plain',
+        'Pacific Maritime',
+        'Taiga Plain',
+        'Taiga Shield'
+        );
+
+    is.selected <- (DF.hansen.cumulative[,'ZONE_NAME'] %in% group.01);
     forest.loss.time.series_time.plot(
-        DF.input = DF.hansen.cumulative
+        DF.input       = DF.hansen.cumulative[is.selected,],
+        PNG.output     = "plot-forest-loss-time-plot-01.png",
+        colour.palette = colour.palette
+        );
+
+    is.selected <- (DF.hansen.cumulative[,'ZONE_NAME'] %in% group.02);
+    forest.loss.time.series_time.plot(
+        DF.input       = DF.hansen.cumulative[is.selected,],
+        PNG.output     = "plot-forest-loss-time-plot-02.png",
+        colour.palette = colour.palette
+        );
+
+    is.selected <- (DF.hansen.cumulative[,'ZONE_NAME'] %in% group.03);
+    forest.loss.time.series_time.plot(
+        DF.input       = DF.hansen.cumulative[is.selected,],
+        PNG.output     = "plot-forest-loss-time-plot-03.png",
+        colour.palette = colour.palette
+        );
+
+    is.selected <- !(DF.hansen.cumulative[,'ZONE_NAME'] %in% c(group.01,group.02,group.03));
+    forest.loss.time.series_time.plot(
+        DF.input       = DF.hansen.cumulative[is.selected,],
+        PNG.output     = "plot-forest-loss-time-plot-04.png",
+        colour.palette = colour.palette
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -34,6 +79,12 @@ forest.loss.time.series_cumulative <- function(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     DF.treecover2000 <- read.csv(CSV.treecover2000);
 
+    DF.treecover2000[,'ZONE_NAME'] <- gsub(
+        x           = DF.treecover2000[,'ZONE_NAME'],
+        pattern     = "Boreal PLain",
+        replacement = "Boreal Plain",
+        );
+
     cat("\nstr(DF.treecover2000)\n");
     print( str(DF.treecover2000)   );
 
@@ -43,6 +94,12 @@ forest.loss.time.series_cumulative <- function(
         x           = colnames(DF.loss.by.year),
         pattern     = "^X",
         replacement = ""
+        );
+
+    DF.loss.by.year[,'ZONE_NAME'] <- gsub(
+        x           = DF.loss.by.year[,'ZONE_NAME'],
+        pattern     = "Boreal PLain",
+        replacement = "Boreal Plain",
         );
 
     year.colnames <- grep(
@@ -113,7 +170,9 @@ forest.loss.time.series_cumulative <- function(
     }
 
 forest.loss.time.series_time.plot <- function(
-    DF.input = NULL
+    DF.input       = NULL,
+    PNG.output     = "plot-forest-loss-time-plot.png",
+    colour.palette = RColorBrewer::brewer.pal(name = "Dark2", n = 8)
     ) {
 
     year.colnames <- grep(x = colnames(DF.input), pattern = "^[0-9]{,4}$", value = TRUE);
@@ -135,10 +194,7 @@ forest.loss.time.series_time.plot <- function(
     DF.temp[,'year'] <- as.integer(DF.temp[,'year']);
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    DF.temp <- DF.temp[DF.temp[,'ZONE_NAME'] != "Boreal Shield",];
-
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    my.ggplot <- initializePlot();
+    my.ggplot <- initializePlot(my.palette = colour.palette);
 
     my.ggplot <- my.ggplot + ggplot2::theme(
         legend.position = "bottom",
@@ -171,13 +227,12 @@ forest.loss.time.series_time.plot <- function(
         breaks = my.breaks
         );
 
-    PNG.output <- paste0("plot-forest-loss-time-plot.png");
     ggsave(
         file   = PNG.output,
         plot   = my.ggplot,
         dpi    = 300,
         height =   8,
-        width  =  24,
+        width  =  16, # 24
         units  = 'in'
         );
 
