@@ -306,13 +306,19 @@ forest.loss.time.series_cumulative <- function(
     DF.hansen.cumulative[,'ZONE_NAME'] <- gsub(
         x           = DF.hansen.cumulative[,'ZONE_NAME'],
         pattern     = "^Boreal PLain$",
-        replacement =  "Boreal Plain",
+        replacement =  "Boreal Plains",
         );
 
     DF.hansen.cumulative[,'ZONE_NAME'] <- gsub(
         x           = DF.hansen.cumulative[,'ZONE_NAME'],
         pattern     = "^Prairie$",
         replacement =  "Prairies",
+        );
+
+    DF.hansen.cumulative[,'ZONE_NAME'] <- gsub(
+        x           = DF.hansen.cumulative[,'ZONE_NAME'],
+        pattern     = "^MixedWood Plain$",
+        replacement =  "Mixedwood Plains",
         );
 
     DF.hansen.cumulative[,'ZONE_NAME'] <- gsub(
