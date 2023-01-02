@@ -1,8 +1,10 @@
 
 forest.loss.time.series <- function(
-    CSV.treecover2000 = "treecover2000_area_by_ecozone.csv",
-    CSV.loss.by.year  = "forest_loss_by_ecozone_year.csv",
-    colour.palette    = RColorBrewer::brewer.pal(name = "Dark2", n = 8)
+    CSV.treecover2000  = "treecover2000_area_by_ecozone.csv",
+    CSV.loss.by.year   = "forest_loss_by_ecozone_year.csv",
+    CSV.nfi.standard   = "NFI_T1_LC_AREA_en.csv",
+    CSV.nfi.customized = "nfi-customized-report.csv",
+    colour.palette     = RColorBrewer::brewer.pal(name = "Dark2", n = 8)
     ) {
 
     thisFunctionName <- "forest.loss.time.series";
@@ -16,18 +18,31 @@ forest.loss.time.series <- function(
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    DF.nfi.standard <- forest.loss.time.series_nfi.standard(
+        CSV.nfi.standard = CSV.nfi.standard
+        );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    forest.loss.time.series_hansen.vs.nfi.standard(
+        DF.hansen = DF.hansen.cumulative,
+        DF.nfi    = DF.nfi.standard
+        );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     group.01 <- c(
-        'Boreal Shield',
-        'Arctic Cordillera'
+        'Arctic Cordillera',
+        'Boreal Shield'
         );
 
     group.02 <- c(
+        'Arctic Cordillera',
         'Atlantic Maritime',
         'Boreal Plain',
         'Montane Cordillera'
         );
 
     group.03 <- c(
+        'Arctic Cordillera',
         'Boreal Cordillera',
         'Hudson Plain',
         'Pacific Maritime',
@@ -71,6 +86,47 @@ forest.loss.time.series <- function(
     }
 
 ##################################################
+forest.loss.time.series_hansen.vs.nfi.standard <- function(
+    DF.hansen = NULL,
+    DF.nfi    = NULL
+    ) {
+
+    cat("\nstr(DF.hansen)\n");
+    print( str(DF.hansen)   );
+
+    # retained.zoneIDs <- c(
+    #     '21',
+    #      '8',
+    #     ''
+    #     );
+    #
+    # DF.hansen <- DF.hansen[DF.hansen[,'ZONE_ID'] %in% retained.zoneIDs,];
+
+    return( NULL );
+
+    }
+
+forest.loss.time.series_nfi.standard <- function(
+    CSV.nfi.standard = NULL
+    ) {
+
+    DF.read <- read.csv(file = CSV.nfi.standard, skip = 1);
+    cat("\nstr(DF.read)\n");
+    print( str(DF.read)   );
+
+    colnames(DF.read) <- tolower(colnames(DF.read));
+    colnames(DF.read) <- gsub(
+        x           = colnames(DF.read),
+        pattern     = "terrestrial\\.ecozone",
+        replacement = "ZONE_NAME"
+        );
+    cat("\nstr(DF.read)\n");
+    print( str(DF.read)   );
+
+    return( NULL );
+
+    }
+
 forest.loss.time.series_cumulative <- function(
     CSV.treecover2000 = NULL,
     CSV.loss.by.year  = NULL
@@ -157,14 +213,24 @@ forest.loss.time.series_cumulative <- function(
         by = "ZONE_ID"
         );
 
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    DF.hansen.cumulative <- DF.hansen.cumulative[,setdiff(colnames(DF.hansen.cumulative),c("PERIMETER","ZONE_ID"))];
+    DF.hansen.cumulative <- stats::aggregate(
+        data = DF.hansen.cumulative,
+        x    = as.formula(". ~ ECOZONE + ZONE_NAME"),
+        FUN  = sum
+        );
+
     cat("\nstr(DF.hansen.cumulative)\n");
     print( str(DF.hansen.cumulative)   );
 
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     arrow::write_parquet(
         x    = DF.hansen.cumulative,
         sink = "DF-hansen-cumulative.parquet"
         );
 
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     return( DF.hansen.cumulative );
 
     }
@@ -184,7 +250,8 @@ forest.loss.time.series_time.plot <- function(
         value   = TRUE
         ));
 
-    DF.temp <- DF.input[,c("ECOZONE","ZONE_ID","ZONE_NAME",year.colnames)];
+    # DF.temp <- DF.input[,c("ECOZONE","ZONE_ID","ZONE_NAME",year.colnames)];
+    DF.temp <- DF.input[,c("ECOZONE","ZONE_NAME",year.colnames)];
     DF.temp <- as.data.frame(tidyr::pivot_longer(
         data      = DF.temp,
         cols      = year.colnames,
@@ -204,14 +271,14 @@ forest.loss.time.series_time.plot <- function(
 
     my.ggplot <- my.ggplot + geom_line(
         data    = DF.temp,
-        mapping = aes(x = year, y = treecover, group = ZONE_ID, colour = ZONE_NAME),
+        mapping = aes(x = year, y = treecover, group = ZONE_NAME, colour = ZONE_NAME),
         size    = 1.00,
         alpha   = 0.50
         );
 
     my.ggplot <- my.ggplot + geom_point(
         data    = DF.temp,
-        mapping = aes(x = year, y = treecover, group = ZONE_ID, colour = ZONE_NAME),
+        mapping = aes(x = year, y = treecover, group = ZONE_NAME, colour = ZONE_NAME),
         size    = 3.00,
         alpha   = 0.99
         );
