@@ -19,13 +19,16 @@ start.proc.time <- proc.time();
 setwd( output.directory );
 
 ##################################################
+require(dplyr);
+require(ggplot2);
 require(googledrive);
 require(reticulate);
-# require(rgee);
+require(tidyr);
 
 # source supporting R code
 code.files <- c(
-    "forest-loss-time-series.R"
+    "forest-loss-time-series.R",
+    "initializePlot.R"
     );
 
 for ( code.file in code.files ) {

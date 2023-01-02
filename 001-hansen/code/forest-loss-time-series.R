@@ -14,6 +14,10 @@ forest.loss.time.series <- function(
         CSV.loss.by.year  = CSV.loss.by.year
         );
 
+    forest.loss.time.series_time.plot(
+        DF.input = DF.hansen.cumulative
+        );
+
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cat(paste0("\n",thisFunctionName,"() quits."));
     cat("\n### ~~~~~~~~~~~~~~~~~~~~ ###\n");
@@ -42,8 +46,9 @@ forest.loss.time.series_cumulative <- function(
         );
 
     year.colnames <- grep(
-        x = colnames(DF.loss.by.year),
-        pattern = "^[0-9]{,4}$"
+        x       = colnames(DF.loss.by.year),
+        pattern = "^[0-9]{,4}$",
+        value   = TRUE
         );
 
     DF.loss.by.year[is.na(DF.loss.by.year)] <- 0;
@@ -104,5 +109,79 @@ forest.loss.time.series_cumulative <- function(
         );
 
     return( DF.hansen.cumulative );
+
+    }
+
+forest.loss.time.series_time.plot <- function(
+    DF.input = NULL
+    ) {
+
+    year.colnames <- grep(x = colnames(DF.input), pattern = "^[0-9]{,4}$", value = TRUE);
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    year.colnames <- as.character(grep(
+        x       = colnames(DF.input),
+        pattern = "^[0-9]{,4}$",
+        value   = TRUE
+        ));
+
+    DF.temp <- DF.input[,c("ECOZONE","ZONE_ID","ZONE_NAME",year.colnames)];
+    DF.temp <- as.data.frame(tidyr::pivot_longer(
+        data      = DF.temp,
+        cols      = year.colnames,
+        names_to  = "year",
+        values_to = "treecover"
+        ));
+    DF.temp[,'year'] <- as.integer(DF.temp[,'year']);
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    DF.temp <- DF.temp[DF.temp[,'ZONE_NAME'] != "Boreal Shield",];
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    my.ggplot <- initializePlot();
+
+    my.ggplot <- my.ggplot + ggplot2::theme(
+        legend.position = "bottom",
+        legend.text     = ggplot2::element_text(size = 30, face = "bold"),
+        axis.text.x     = ggplot2::element_text(size = 20, face = "bold", angle = 90, vjust = 0.5)
+        );
+
+    my.ggplot <- my.ggplot + geom_line(
+        data    = DF.temp,
+        mapping = aes(x = year, y = treecover, group = ZONE_ID, colour = ZONE_NAME),
+        size    = 1.00,
+        alpha   = 0.50
+        );
+
+    my.ggplot <- my.ggplot + geom_point(
+        data    = DF.temp,
+        mapping = aes(x = year, y = treecover, group = ZONE_ID, colour = ZONE_NAME),
+        size    = 3.00,
+        alpha   = 0.99
+        );
+
+    my.range  <- range(DF.temp[,'year']);
+    my.min    <- 2 * floor(  min(my.range)/2);
+    my.max    <- 2 * ceiling(max(my.range)/2);
+    my.limits <- c(my.min,my.max);
+    my.breaks <- seq(my.min,my.max,2);
+
+    my.ggplot <- my.ggplot + scale_x_continuous(
+        limits = my.range,
+        breaks = my.breaks
+        );
+
+    PNG.output <- paste0("plot-forest-loss-time-plot.png");
+    ggsave(
+        file   = PNG.output,
+        plot   = my.ggplot,
+        dpi    = 300,
+        height =   8,
+        width  =  24,
+        units  = 'in'
+        );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    return( NULL );
 
     }
