@@ -1,7 +1,13 @@
+
+
 downloading: https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/csv/NFI_T1_LC_AREA_en.csv
 downloading: https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/pdf/NFI_T1_LC_AREA_en.pdf
 downloading: https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/csv/NFI_T1_LC_AREA_SEP_en.csv
 downloading: https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/pdf/NFI_T1_LC_AREA_SEP_en.pdf
+downloading: https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/csv/NFI_T4_FOR_AREA_en.csv
+downloading: https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/pdf/NFI_T4_FOR_AREA_en.pdf
+downloading: https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/csv/NFI_T4_FOR_AREA_SEP_en.csv
+downloading: https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/pdf/NFI_T4_FOR_AREA_SEP_en.pdf
 
 
 done

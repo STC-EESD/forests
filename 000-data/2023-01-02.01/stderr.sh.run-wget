@@ -1,44 +1,88 @@
---2023-01-02 17:20:39--  https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/csv/NFI_T1_LC_AREA_en.csv
+--2023-01-02 17:42:37--  https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/csv/NFI_T1_LC_AREA_en.csv
 Resolving nfi.nfis.org (nfi.nfis.org)... 199.175.96.216
 Connecting to nfi.nfis.org (nfi.nfis.org)|199.175.96.216|:443... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 1288 (1.3K) [text/csv]
 Saving to: ‘NFI_T1_LC_AREA_en.csv’
 
-     0K .                                                     100% 81.9M=0s
+     0K .                                                     100% 45.5M=0s
 
-2023-01-02 17:20:39 (81.9 MB/s) - ‘NFI_T1_LC_AREA_en.csv’ saved [1288/1288]
+2023-01-02 17:42:37 (45.5 MB/s) - ‘NFI_T1_LC_AREA_en.csv’ saved [1288/1288]
 
---2023-01-02 17:20:39--  https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/pdf/NFI_T1_LC_AREA_en.pdf
+--2023-01-02 17:42:37--  https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/pdf/NFI_T1_LC_AREA_en.pdf
 Resolving nfi.nfis.org (nfi.nfis.org)... 199.175.96.216
 Connecting to nfi.nfis.org (nfi.nfis.org)|199.175.96.216|:443... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 33758 (33K) [application/pdf]
 Saving to: ‘NFI_T1_LC_AREA_en.pdf’
 
-     0K .......... .......... .......... ..                   100%  334K=0.1s
+     0K .......... .......... .......... ..                   100%  330K=0.1s
 
-2023-01-02 17:20:40 (334 KB/s) - ‘NFI_T1_LC_AREA_en.pdf’ saved [33758/33758]
+2023-01-02 17:42:38 (330 KB/s) - ‘NFI_T1_LC_AREA_en.pdf’ saved [33758/33758]
 
---2023-01-02 17:20:40--  https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/csv/NFI_T1_LC_AREA_SEP_en.csv
+--2023-01-02 17:42:38--  https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/csv/NFI_T1_LC_AREA_SEP_en.csv
 Resolving nfi.nfis.org (nfi.nfis.org)... 199.175.96.216
 Connecting to nfi.nfis.org (nfi.nfis.org)|199.175.96.216|:443... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 614 [text/csv]
 Saving to: ‘NFI_T1_LC_AREA_SEP_en.csv’
 
-     0K                                                       100% 39.0M=0s
+     0K                                                       100% 36.6M=0s
 
-2023-01-02 17:20:40 (39.0 MB/s) - ‘NFI_T1_LC_AREA_SEP_en.csv’ saved [614/614]
+2023-01-02 17:42:38 (36.6 MB/s) - ‘NFI_T1_LC_AREA_SEP_en.csv’ saved [614/614]
 
---2023-01-02 17:20:40--  https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/pdf/NFI_T1_LC_AREA_SEP_en.pdf
+--2023-01-02 17:42:38--  https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/pdf/NFI_T1_LC_AREA_SEP_en.pdf
 Resolving nfi.nfis.org (nfi.nfis.org)... 199.175.96.216
 Connecting to nfi.nfis.org (nfi.nfis.org)|199.175.96.216|:443... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 31546 (31K) [application/pdf]
 Saving to: ‘NFI_T1_LC_AREA_SEP_en.pdf’
 
-     0K .......... .......... ..........                      100%  311K=0.1s
+     0K .......... .......... ..........                      100%  325K=0.09s
 
-2023-01-02 17:20:41 (311 KB/s) - ‘NFI_T1_LC_AREA_SEP_en.pdf’ saved [31546/31546]
+2023-01-02 17:42:39 (325 KB/s) - ‘NFI_T1_LC_AREA_SEP_en.pdf’ saved [31546/31546]
+
+--2023-01-02 17:42:39--  https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/csv/NFI_T4_FOR_AREA_en.csv
+Resolving nfi.nfis.org (nfi.nfis.org)... 199.175.96.216
+Connecting to nfi.nfis.org (nfi.nfis.org)|199.175.96.216|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 981 [text/csv]
+Saving to: ‘NFI_T4_FOR_AREA_en.csv’
+
+     0K                                                       100% 29.2M=0s
+
+2023-01-02 17:42:39 (29.2 MB/s) - ‘NFI_T4_FOR_AREA_en.csv’ saved [981/981]
+
+--2023-01-02 17:42:39--  https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/pdf/NFI_T4_FOR_AREA_en.pdf
+Resolving nfi.nfis.org (nfi.nfis.org)... 199.175.96.216
+Connecting to nfi.nfis.org (nfi.nfis.org)|199.175.96.216|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 31504 (31K) [application/pdf]
+Saving to: ‘NFI_T4_FOR_AREA_en.pdf’
+
+     0K .......... .......... ..........                      100%  321K=0.1s
+
+2023-01-02 17:42:40 (321 KB/s) - ‘NFI_T4_FOR_AREA_en.pdf’ saved [31504/31504]
+
+--2023-01-02 17:42:40--  https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/csv/NFI_T4_FOR_AREA_SEP_en.csv
+Resolving nfi.nfis.org (nfi.nfis.org)... 199.175.96.216
+Connecting to nfi.nfis.org (nfi.nfis.org)|199.175.96.216|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 620 [text/csv]
+Saving to: ‘NFI_T4_FOR_AREA_SEP_en.csv’
+
+     0K                                                       100% 34.8M=0s
+
+2023-01-02 17:42:40 (34.8 MB/s) - ‘NFI_T4_FOR_AREA_SEP_en.csv’ saved [620/620]
+
+--2023-01-02 17:42:40--  https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/pdf/NFI_T4_FOR_AREA_SEP_en.pdf
+Resolving nfi.nfis.org (nfi.nfis.org)... 199.175.96.216
+Connecting to nfi.nfis.org (nfi.nfis.org)|199.175.96.216|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 31110 (30K) [application/pdf]
+Saving to: ‘NFI_T4_FOR_AREA_SEP_en.pdf’
+
+     0K .......... .......... ..........                      100%  307K=0.1s
+
+2023-01-02 17:42:41 (307 KB/s) - ‘NFI_T4_FOR_AREA_SEP_en.pdf’ saved [31110/31110]
 
