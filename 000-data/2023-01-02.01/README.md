@@ -1,9 +1,9 @@
 
-National Forest Inventory data were downloaded on January 2, 2023 from:
-https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/csv/NFI_T1_LC_AREA_en.csv
-https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/pdf/NFI_T1_LC_AREA_en.pdf
-https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/csv/NFI_T1_LC_AREA_SEP_en.csv
-https://nfi.nfis.org/resources/general/summaries/t1/en/NFI/pdf/NFI_T1_LC_AREA_SEP_en.pdf
+The CSV file
+
+nfi-customized-report-2023-01-02.csv
+
+was downloaded on January 2, 2023 from:
 
 https://nfi.nfis.org/en/customized_report
 
