@@ -87,21 +87,115 @@ forest.loss.time.series <- function(
 
 ##################################################
 forest.loss.time.series_hansen.vs.nfi.standard <- function(
-    DF.hansen = NULL,
-    DF.nfi    = NULL
+    DF.hansen      = NULL,
+    DF.nfi         = NULL,
+    colour.palette = RColorBrewer::brewer.pal(name = "Dark2", n = 8),
+    PNG.output     = "plot-hansen-vs-nfi-standard.png"
     ) {
 
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cat("\nstr(DF.hansen)\n");
     print( str(DF.hansen)   );
 
-    # retained.zoneIDs <- c(
-    #     '21',
-    #      '8',
-    #     ''
+    colnames(DF.nfi) <- paste0("nfi.",colnames(DF.nfi));
+    colnames(DF.nfi) <- gsub(
+        x           = colnames(DF.nfi),
+        pattern     = "^nfi\\.ZONE_NAME$",
+        replacement = "ZONE_NAME"
+        );
+    cat("\nstr(DF.nfi)\n");
+    print( str(DF.nfi)   );
+
+    DF.merged <- merge(
+        x     = DF.hansen,
+        y     = DF.nfi,
+        by    = "ZONE_NAME",
+        all.x = TRUE
+        );
+    cat("\nstr(DF.merged)\n");
+    print( str(DF.merged)   );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    cat("\nDF.merged[,c('ZONE_NAME','nfi.total','eeAREA','nfi.treed','treecover2000')]\n");
+    print( DF.merged[,c('ZONE_NAME','nfi.total','eeAREA','nfi.treed','treecover2000')]   );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    my.ggplot <- initializePlot(my.palette = colour.palette);
+
+    my.ggplot <- my.ggplot + geom_abline(
+        slope     = 1,
+        intercept = 0,
+        colour    = "gray"
+        );
+
+    # my.ggplot <- my.ggplot + ggplot2::theme(
+    #     legend.position = "bottom",
+    #     legend.text     = ggplot2::element_text(size = 30, face = "bold"),
+    #     axis.text.x     = ggplot2::element_text(size = 20, face = "bold", angle = 90, vjust = 0.5)
+    #     );
+
+    my.ggplot <- my.ggplot + geom_point(
+        data    = DF.merged,
+        mapping = aes(x = nfi.total, y = eeAREA),
+        colour  = "black",
+        size    = 3.00,
+        alpha   = 0.99
+        );
+
+    my.ggplot <- my.ggplot + geom_point(
+        data    = DF.merged,
+        mapping = aes(x = nfi.treed, y = treecover2000),
+        colour  = "red",
+        size    = 3.00,
+        alpha   = 0.99
+        );
+
+    my.ggplot <- my.ggplot + geom_point(
+        data    = DF.merged,
+        mapping = aes(x = nfi.treed, y = treecover2000),
+        colour  = "red",
+        size    = 6.00,
+        alpha   = 0.20
+        );
+
+    # my.range  <- range(DF.temp[,'year']);
+    # my.min    <- 2 * floor(  min(my.range)/2);
+    # my.max    <- 2 * ceiling(max(my.range)/2);
+    # my.limits <- c(my.min,my.max);
+    # my.breaks <- seq(my.min,my.max,2);
+
+    my.ggplot <- my.ggplot + scale_x_continuous(
+        limits = c(  0,2.5e6),
+        breaks = seq(0,2.5e6,0.5e6),
+        labels = scales::scientific
+        );
+
+    my.ggplot <- my.ggplot + scale_y_continuous(
+        limits = c(  0,2.5e6),
+        breaks = seq(0,2.5e6,0.5e6),
+        labels = scales::scientific
+        );
+
+    # my.ggplot <- my.ggplot + scale_x_continuous(
+    #     limits = c(  0,7),
+    #     breaks = seq(0,7,2)
     #     );
     #
-    # DF.hansen <- DF.hansen[DF.hansen[,'ZONE_ID'] %in% retained.zoneIDs,];
+    # my.ggplot <- my.ggplot + scale_y_continuous(
+    #     limits = c(  0,7),
+    #     breaks = seq(0,7,2)
+    #     );
 
+    ggsave(
+        file   = PNG.output,
+        plot   = my.ggplot,
+        dpi    = 300,
+        height =  16,
+        width  =  17, # 24
+        units  = 'in'
+        );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     return( NULL );
 
     }
@@ -111,8 +205,8 @@ forest.loss.time.series_nfi.standard <- function(
     ) {
 
     DF.read <- read.csv(file = CSV.nfi.standard, skip = 1);
-    cat("\nstr(DF.read)\n");
-    print( str(DF.read)   );
+    # cat("\nstr(DF.read)\n");
+    # print( str(DF.read)   );
 
     colnames(DF.read) <- tolower(colnames(DF.read));
     colnames(DF.read) <- gsub(
@@ -120,10 +214,17 @@ forest.loss.time.series_nfi.standard <- function(
         pattern     = "terrestrial\\.ecozone",
         replacement = "ZONE_NAME"
         );
+
+    rownames(DF.read) <- as.character(DF.read[,'ZONE_NAME']);
+    DF.read <- DF.read[,setdiff(colnames(DF.read),'ZONE_NAME')];
+    DF.read <- 10.0 * DF.read;
+    DF.read[,'ZONE_NAME'] <- rownames(DF.read);
+    DF.read <- DF.read[,c('ZONE_NAME',setdiff(colnames(DF.read),'ZONE_NAME'))];
+
     cat("\nstr(DF.read)\n");
     print( str(DF.read)   );
 
-    return( NULL );
+    return( DF.read );
 
     }
 
@@ -135,12 +236,6 @@ forest.loss.time.series_cumulative <- function(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     DF.treecover2000 <- read.csv(CSV.treecover2000);
 
-    DF.treecover2000[,'ZONE_NAME'] <- gsub(
-        x           = DF.treecover2000[,'ZONE_NAME'],
-        pattern     = "Boreal PLain",
-        replacement = "Boreal Plain",
-        );
-
     cat("\nstr(DF.treecover2000)\n");
     print( str(DF.treecover2000)   );
 
@@ -150,12 +245,6 @@ forest.loss.time.series_cumulative <- function(
         x           = colnames(DF.loss.by.year),
         pattern     = "^X",
         replacement = ""
-        );
-
-    DF.loss.by.year[,'ZONE_NAME'] <- gsub(
-        x           = DF.loss.by.year[,'ZONE_NAME'],
-        pattern     = "Boreal PLain",
-        replacement = "Boreal Plain",
         );
 
     year.colnames <- grep(
@@ -211,6 +300,25 @@ forest.loss.time.series_cumulative <- function(
         x  = DF.treecover2000,
         y  = DF.temp,
         by = "ZONE_ID"
+        );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    DF.hansen.cumulative[,'ZONE_NAME'] <- gsub(
+        x           = DF.hansen.cumulative[,'ZONE_NAME'],
+        pattern     = "^Boreal PLain$",
+        replacement =  "Boreal Plain",
+        );
+
+    DF.hansen.cumulative[,'ZONE_NAME'] <- gsub(
+        x           = DF.hansen.cumulative[,'ZONE_NAME'],
+        pattern     = "^Prairie$",
+        replacement =  "Prairies",
+        );
+
+    DF.hansen.cumulative[,'ZONE_NAME'] <- gsub(
+        x           = DF.hansen.cumulative[,'ZONE_NAME'],
+        pattern     = "^Taiga Plain$",
+        replacement =  "Taiga Plains",
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
