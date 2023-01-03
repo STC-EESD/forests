@@ -78,16 +78,16 @@ forest.loss.time.series <- function(
     group.02 <- c(
         'Arctic Cordillera',
         'Atlantic Maritime',
-        'Boreal Plain',
+        'Boreal Plains',
         'Montane Cordillera'
         );
 
     group.03 <- c(
         'Arctic Cordillera',
         'Boreal Cordillera',
-        'Hudson Plain',
+        'Hudson Plains',
         'Pacific Maritime',
-        'Taiga Plain',
+        'Taiga Plains',
         'Taiga Shield'
         );
 
@@ -413,6 +413,12 @@ forest.loss.time.series_cumulative <- function(
         x           = DF.hansen.cumulative[,'ZONE_NAME'],
         pattern     = "^Boreal PLain$",
         replacement =  "Boreal Plains",
+        );
+
+    DF.hansen.cumulative[,'ZONE_NAME'] <- gsub(
+        x           = DF.hansen.cumulative[,'ZONE_NAME'],
+        pattern     = "^Hudson Plain$",
+        replacement =  "Hudson Plains",
         );
 
     DF.hansen.cumulative[,'ZONE_NAME'] <- gsub(
