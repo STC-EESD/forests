@@ -91,33 +91,33 @@ forest.loss.time.series <- function(
         'Taiga Shield'
         );
 
-    # is.selected <- (DF.hansen.cumulative[,'ZONE_NAME'] %in% group.01);
-    # forest.loss.time.series_time.plot(
-    #     DF.input       = DF.hansen.cumulative[is.selected,],
-    #     PNG.output     = "plot-forest-loss-time-plot-01.png",
-    #     colour.palette = colour.palette
-    #     );
-    #
-    # is.selected <- (DF.hansen.cumulative[,'ZONE_NAME'] %in% group.02);
-    # forest.loss.time.series_time.plot(
-    #     DF.input       = DF.hansen.cumulative[is.selected,],
-    #     PNG.output     = "plot-forest-loss-time-plot-02.png",
-    #     colour.palette = colour.palette
-    #     );
-    #
-    # is.selected <- (DF.hansen.cumulative[,'ZONE_NAME'] %in% group.03);
-    # forest.loss.time.series_time.plot(
-    #     DF.input       = DF.hansen.cumulative[is.selected,],
-    #     PNG.output     = "plot-forest-loss-time-plot-03.png",
-    #     colour.palette = colour.palette
-    #     );
-    #
-    # is.selected <- !(DF.hansen.cumulative[,'ZONE_NAME'] %in% c(group.01,group.02,group.03));
-    # forest.loss.time.series_time.plot(
-    #     DF.input       = DF.hansen.cumulative[is.selected,],
-    #     PNG.output     = "plot-forest-loss-time-plot-04.png",
-    #     colour.palette = colour.palette
-    #     );
+    is.selected <- (DF.hansen.cumulative[,'ZONE_NAME'] %in% group.01);
+    forest.loss.time.series_time.plot(
+        DF.input       = DF.hansen.cumulative[is.selected,],
+        PNG.output     = "plot-forest-loss-time-plot-01.png",
+        colour.palette = colour.palette
+        );
+
+    is.selected <- (DF.hansen.cumulative[,'ZONE_NAME'] %in% group.02);
+    forest.loss.time.series_time.plot(
+        DF.input       = DF.hansen.cumulative[is.selected,],
+        PNG.output     = "plot-forest-loss-time-plot-02.png",
+        colour.palette = colour.palette
+        );
+
+    is.selected <- (DF.hansen.cumulative[,'ZONE_NAME'] %in% group.03);
+    forest.loss.time.series_time.plot(
+        DF.input       = DF.hansen.cumulative[is.selected,],
+        PNG.output     = "plot-forest-loss-time-plot-03.png",
+        colour.palette = colour.palette
+        );
+
+    is.selected <- !(DF.hansen.cumulative[,'ZONE_NAME'] %in% c(group.01,group.02,group.03));
+    forest.loss.time.series_time.plot(
+        DF.input       = DF.hansen.cumulative[is.selected,],
+        PNG.output     = "plot-forest-loss-time-plot-04.png",
+        colour.palette = colour.palette
+        );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cat(paste0("\n",thisFunctionName,"() quits."));
