@@ -461,17 +461,23 @@ forest.loss.time.series_time.plot <- function(
     colour.palette = RColorBrewer::brewer.pal(name = "Dark2", n = 8)
     ) {
 
-    year.colnames <- grep(x = colnames(DF.input), pattern = "^[0-9]{,4}$", value = TRUE);
-
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    colnames(DF.input) <- gsub(
+        x           = colnames(DF.input),
+        pattern     = "^hansen\\.",
+        replacement = ""
+        );
+
     year.colnames <- as.character(grep(
         x       = colnames(DF.input),
-        pattern = "^[0-9]{,4}$",
+        pattern = "^[0-9]{4,4}$",
         value   = TRUE
         ));
 
-    # DF.temp <- DF.input[,c("ECOZONE","ZONE_ID","ZONE_NAME",year.colnames)];
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     DF.temp <- DF.input[,c("ECOZONE","ZONE_NAME",year.colnames)];
+    cat("\nstr(DF.temp)\n");
+    print( str(DF.temp)   );
     DF.temp <- as.data.frame(tidyr::pivot_longer(
         data      = DF.temp,
         cols      = year.colnames,
