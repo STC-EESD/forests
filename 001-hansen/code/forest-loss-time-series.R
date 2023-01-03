@@ -2,7 +2,8 @@
 forest.loss.time.series <- function(
     CSV.treecover2000  = "treecover2000_area_by_ecozone.csv",
     CSV.loss.by.year   = "forest_loss_by_ecozone_year.csv",
-    CSV.nfi.standard   = "NFI_T1_LC_AREA_en.csv",
+    CSV.nfi.landcover  = "NFI_T1_LC_AREA_en.csv",
+    CSV.nfi.forest     = "NFI_T4_FOR_AREA_en.csv",
     CSV.nfi.customized = "nfi-customized-report.csv",
     colour.palette     = RColorBrewer::brewer.pal(name = "Dark2", n = 8)
     ) {
@@ -19,14 +20,54 @@ forest.loss.time.series <- function(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     DF.nfi.standard <- forest.loss.time.series_nfi.standard(
-        CSV.nfi.standard = CSV.nfi.standard
+        CSV.nfi.landcover = CSV.nfi.landcover,
+        CSV.nfi.forest    = CSV.nfi.forest
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    forest.loss.time.series_hansen.vs.nfi.standard(
-        DF.hansen = DF.hansen.cumulative,
-        DF.nfi    = DF.nfi.standard
+    DF.hansen.nfi <- merge(
+        x     = DF.hansen.cumulative,
+        y     = DF.nfi.standard,
+        by    = "ZONE_NAME",
+        all.x = TRUE
         );
+    cat("\nstr(DF.hansen.nfi)\n");
+    print( str(DF.hansen.nfi)   );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    list.colname.pairs <- list(
+        c(
+            colname.hansen    = "hansen.2000",
+            colname.nfi       = "nfi.landcover.treed",
+            colname.nfi.total = "nfi.landcover.total"
+            ),
+        c(
+            colname.hansen    = "hansen.2000",
+            colname.nfi       = "nfi.forest.forest.land",
+            colname.nfi.total = "nfi.landcover.total"
+            ),
+        c(
+            colname.hansen    = "hansen.2017",
+            colname.nfi       = "nfi.landcover.treed",
+            colname.nfi.total = "nfi.landcover.total"
+            ),
+        c(
+            colname.hansen    = "hansen.2017",
+            colname.nfi       = "nfi.forest.forest.land",
+            colname.nfi.total = "nfi.landcover.total"
+            )
+        );
+    DF.colname.pairs <- t(as.data.frame(list.colname.pairs));
+    rownames(DF.colname.pairs) <- NULL;
+
+    for ( row.index in seq(1,nrow(DF.colname.pairs)) ) {
+        forest.loss.time.series_hansen.vs.nfi.standard(
+            DF.input          = DF.hansen.nfi,
+            colname.hansen    = DF.colname.pairs[row.index,'colname.hansen'   ],
+            colname.nfi       = DF.colname.pairs[row.index,'colname.nfi'      ],
+            colname.nfi.total = DF.colname.pairs[row.index,'colname.nfi.total']
+        );
+        }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     group.01 <- c(
@@ -50,33 +91,33 @@ forest.loss.time.series <- function(
         'Taiga Shield'
         );
 
-    is.selected <- (DF.hansen.cumulative[,'ZONE_NAME'] %in% group.01);
-    forest.loss.time.series_time.plot(
-        DF.input       = DF.hansen.cumulative[is.selected,],
-        PNG.output     = "plot-forest-loss-time-plot-01.png",
-        colour.palette = colour.palette
-        );
-
-    is.selected <- (DF.hansen.cumulative[,'ZONE_NAME'] %in% group.02);
-    forest.loss.time.series_time.plot(
-        DF.input       = DF.hansen.cumulative[is.selected,],
-        PNG.output     = "plot-forest-loss-time-plot-02.png",
-        colour.palette = colour.palette
-        );
-
-    is.selected <- (DF.hansen.cumulative[,'ZONE_NAME'] %in% group.03);
-    forest.loss.time.series_time.plot(
-        DF.input       = DF.hansen.cumulative[is.selected,],
-        PNG.output     = "plot-forest-loss-time-plot-03.png",
-        colour.palette = colour.palette
-        );
-
-    is.selected <- !(DF.hansen.cumulative[,'ZONE_NAME'] %in% c(group.01,group.02,group.03));
-    forest.loss.time.series_time.plot(
-        DF.input       = DF.hansen.cumulative[is.selected,],
-        PNG.output     = "plot-forest-loss-time-plot-04.png",
-        colour.palette = colour.palette
-        );
+    # is.selected <- (DF.hansen.cumulative[,'ZONE_NAME'] %in% group.01);
+    # forest.loss.time.series_time.plot(
+    #     DF.input       = DF.hansen.cumulative[is.selected,],
+    #     PNG.output     = "plot-forest-loss-time-plot-01.png",
+    #     colour.palette = colour.palette
+    #     );
+    #
+    # is.selected <- (DF.hansen.cumulative[,'ZONE_NAME'] %in% group.02);
+    # forest.loss.time.series_time.plot(
+    #     DF.input       = DF.hansen.cumulative[is.selected,],
+    #     PNG.output     = "plot-forest-loss-time-plot-02.png",
+    #     colour.palette = colour.palette
+    #     );
+    #
+    # is.selected <- (DF.hansen.cumulative[,'ZONE_NAME'] %in% group.03);
+    # forest.loss.time.series_time.plot(
+    #     DF.input       = DF.hansen.cumulative[is.selected,],
+    #     PNG.output     = "plot-forest-loss-time-plot-03.png",
+    #     colour.palette = colour.palette
+    #     );
+    #
+    # is.selected <- !(DF.hansen.cumulative[,'ZONE_NAME'] %in% c(group.01,group.02,group.03));
+    # forest.loss.time.series_time.plot(
+    #     DF.input       = DF.hansen.cumulative[is.selected,],
+    #     PNG.output     = "plot-forest-loss-time-plot-04.png",
+    #     colour.palette = colour.palette
+    #     );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cat(paste0("\n",thisFunctionName,"() quits."));
@@ -87,37 +128,41 @@ forest.loss.time.series <- function(
 
 ##################################################
 forest.loss.time.series_hansen.vs.nfi.standard <- function(
-    DF.hansen      = NULL,
-    DF.nfi         = NULL,
-    colour.palette = RColorBrewer::brewer.pal(name = "Dark2", n = 8),
-    PNG.output     = "plot-hansen-vs-nfi-standard.png"
+    DF.input          = NULL,
+    colname.hansen    = NULL,
+    colname.nfi       = NULL,
+    colname.nfi.total = NULL,
+    colour.palette    = RColorBrewer::brewer.pal(name = "Dark2", n = 8)
     ) {
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    cat("\nstr(DF.hansen)\n");
-    print( str(DF.hansen)   );
-
-    colnames(DF.nfi) <- paste0("nfi.",colnames(DF.nfi));
-    colnames(DF.nfi) <- gsub(
-        x           = colnames(DF.nfi),
-        pattern     = "^nfi\\.ZONE_NAME$",
-        replacement = "ZONE_NAME"
-        );
-    cat("\nstr(DF.nfi)\n");
-    print( str(DF.nfi)   );
-
-    DF.merged <- merge(
-        x     = DF.hansen,
-        y     = DF.nfi,
-        by    = "ZONE_NAME",
-        all.x = TRUE
-        );
-    cat("\nstr(DF.merged)\n");
-    print( str(DF.merged)   );
+    cat("\nstr(DF.input)\n");
+    print( str(DF.input)   );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    cat("\nDF.merged[,c('ZONE_NAME','nfi.total','eeAREA','nfi.treed','treecover2000')]\n");
-    print( DF.merged[,c('ZONE_NAME','nfi.total','eeAREA','nfi.treed','treecover2000')]   );
+    relevant.colnames <- c('ZONE_NAME',colname.nfi.total,'eeAREA',colname.nfi,colname.hansen);
+    DF.temp           <- DF.input[,relevant.colnames];
+
+    cat("\nstr(DF.temp)\n");
+    print( str(DF.temp)   );
+
+    colnames(DF.temp) <- gsub(
+        x           = colnames(DF.temp),
+        pattern     =  colname.nfi.total,
+        replacement = "colname.nfi.total"
+        );
+
+    colnames(DF.temp) <- gsub(
+        x           = colnames(DF.temp),
+        pattern     =  colname.nfi,
+        replacement = "colname.nfi"
+        );
+
+    colnames(DF.temp) <- gsub(
+        x           = colnames(DF.temp),
+        pattern     =  colname.hansen,
+        replacement = "colname.hansen"
+        );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     my.ggplot <- initializePlot(my.palette = colour.palette);
@@ -128,35 +173,39 @@ forest.loss.time.series_hansen.vs.nfi.standard <- function(
         colour    = "gray"
         );
 
-    # my.ggplot <- my.ggplot + ggplot2::theme(
-    #     legend.position = "bottom",
-    #     legend.text     = ggplot2::element_text(size = 30, face = "bold"),
-    #     axis.text.x     = ggplot2::element_text(size = 20, face = "bold", angle = 90, vjust = 0.5)
-    #     );
+    my.ggplot <- my.ggplot + ggplot2::theme(
+        axis.title.x = ggplot2::element_text(size = 50, face = "bold"),
+        axis.title.y = ggplot2::element_text(size = 50, face = "bold"),
+        axis.text.x  = ggplot2::element_text(size = 40, face = "bold"),
+        axis.text.y  = ggplot2::element_text(size = 40, face = "bold")
+        );
 
     my.ggplot <- my.ggplot + geom_point(
-        data    = DF.merged,
-        mapping = aes(x = nfi.total, y = eeAREA),
+        data    = DF.temp,
+        mapping = aes(x = colname.nfi.total, y = eeAREA),
         colour  = "black",
         size    = 3.00,
         alpha   = 0.99
         );
 
     my.ggplot <- my.ggplot + geom_point(
-        data    = DF.merged,
-        mapping = aes(x = nfi.treed, y = treecover2000),
+        data    = DF.temp,
+        mapping = aes(x = colname.nfi, y = colname.hansen),
         colour  = "red",
         size    = 3.00,
         alpha   = 0.99
         );
 
     my.ggplot <- my.ggplot + geom_point(
-        data    = DF.merged,
-        mapping = aes(x = nfi.treed, y = treecover2000),
+        data    = DF.temp,
+        mapping = aes(x = colname.nfi, y = colname.hansen),
         colour  = "red",
         size    = 6.00,
         alpha   = 0.20
         );
+
+    my.ggplot <- my.ggplot + xlab(label = colname.nfi   );
+    my.ggplot <- my.ggplot + ylab(label = colname.hansen);
 
     # my.range  <- range(DF.temp[,'year']);
     # my.min    <- 2 * floor(  min(my.range)/2);
@@ -186,6 +235,14 @@ forest.loss.time.series_hansen.vs.nfi.standard <- function(
     #     breaks = seq(0,7,2)
     #     );
 
+    PNG.output <- paste0(
+        "plot_",
+        gsub(x = colname.hansen, pattern = "\\.", replacement = "-"),
+        "_vs_",
+        gsub(x = colname.nfi,    pattern = "\\.", replacement = "-"),
+        ".png"
+        );
+
     ggsave(
         file   = PNG.output,
         plot   = my.ggplot,
@@ -201,30 +258,77 @@ forest.loss.time.series_hansen.vs.nfi.standard <- function(
     }
 
 forest.loss.time.series_nfi.standard <- function(
-    CSV.nfi.standard = NULL
+    CSV.nfi.landcover = NULL,
+    CSV.nfi.forest    = NULL
     ) {
 
-    DF.read <- read.csv(file = CSV.nfi.standard, skip = 1);
-    # cat("\nstr(DF.read)\n");
-    # print( str(DF.read)   );
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    DF.nfi.landcover <- read.csv(file = CSV.nfi.landcover, skip = 1);
+    # cat("\nstr(DF.nfi.landcover)\n");
+    # print( str(DF.nfi.landcover)   );
 
-    colnames(DF.read) <- tolower(colnames(DF.read));
-    colnames(DF.read) <- gsub(
-        x           = colnames(DF.read),
+    colnames(DF.nfi.landcover) <- tolower(colnames(DF.nfi.landcover));
+    colnames(DF.nfi.landcover) <- gsub(
+        x           = colnames(DF.nfi.landcover),
         pattern     = "terrestrial\\.ecozone",
         replacement = "ZONE_NAME"
         );
 
-    rownames(DF.read) <- as.character(DF.read[,'ZONE_NAME']);
-    DF.read <- DF.read[,setdiff(colnames(DF.read),'ZONE_NAME')];
-    DF.read <- 10.0 * DF.read;
-    DF.read[,'ZONE_NAME'] <- rownames(DF.read);
-    DF.read <- DF.read[,c('ZONE_NAME',setdiff(colnames(DF.read),'ZONE_NAME'))];
+    rownames(DF.nfi.landcover) <- as.character(DF.nfi.landcover[,'ZONE_NAME']);
+    DF.nfi.landcover <- DF.nfi.landcover[,setdiff(colnames(DF.nfi.landcover),'ZONE_NAME')];
+    DF.nfi.landcover <- 10.0 * DF.nfi.landcover;
+    DF.nfi.landcover[,'ZONE_NAME'] <- rownames(DF.nfi.landcover);
+    DF.nfi.landcover <- DF.nfi.landcover[,c('ZONE_NAME',setdiff(colnames(DF.nfi.landcover),'ZONE_NAME'))];
 
-    cat("\nstr(DF.read)\n");
-    print( str(DF.read)   );
+    colnames(DF.nfi.landcover) <- paste0("nfi.landcover.",colnames(DF.nfi.landcover));
+    colnames(DF.nfi.landcover) <- gsub(
+        x           = colnames(DF.nfi.landcover),
+        pattern     = "nfi\\.landcover\\.ZONE_NAME",
+        replacement = "ZONE_NAME"
+        );
 
-    return( DF.read );
+    cat("\nstr(DF.nfi.landcover)\n");
+    print( str(DF.nfi.landcover)   );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    DF.nfi.forest <- read.csv(file = CSV.nfi.forest, skip = 1);
+
+    colnames(DF.nfi.forest) <- tolower(colnames(DF.nfi.forest));
+    colnames(DF.nfi.forest) <- gsub(
+        x           = colnames(DF.nfi.forest),
+        pattern     = "terrestrial\\.ecozone",
+        replacement = "ZONE_NAME"
+        );
+
+    rownames(DF.nfi.forest) <- as.character(DF.nfi.forest[,'ZONE_NAME']);
+    DF.nfi.forest <- DF.nfi.forest[,setdiff(colnames(DF.nfi.forest),'ZONE_NAME')];
+    DF.nfi.forest <- 10.0 * DF.nfi.forest;
+    DF.nfi.forest[,'ZONE_NAME'] <- rownames(DF.nfi.forest);
+    DF.nfi.forest <- DF.nfi.forest[,c('ZONE_NAME',setdiff(colnames(DF.nfi.forest),'ZONE_NAME'))];
+
+    colnames(DF.nfi.forest) <- paste0("nfi.forest.",colnames(DF.nfi.forest));
+    colnames(DF.nfi.forest) <- gsub(
+        x           = colnames(DF.nfi.forest),
+        pattern     = "nfi\\.forest\\.ZONE_NAME",
+        replacement = "ZONE_NAME"
+        );
+
+    cat("\nstr(DF.nfi.forest)\n");
+    print( str(DF.nfi.forest)   );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    DF.output <- merge(
+        x     = DF.nfi.landcover,
+        y     = DF.nfi.forest,
+        by    = "ZONE_NAME",
+        all.x = TRUE
+        );
+
+    cat("\nstr(DF.output)\n");
+    print( str(DF.output)   );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    return( DF.output );
 
     }
 
@@ -281,12 +385,14 @@ forest.loss.time.series_cumulative <- function(
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    DF.temp <- DF.hansen[,c("treecover2000",as.character(seq(2001,2021)))];
+    # DF.temp <- DF.hansen[,c("treecover2000",as.character(seq(2001,2021)))];
+    DF.temp <- DF.hansen[,c("treecover2000",as.character(year.colnames))];
     colnames(DF.temp) <- gsub(
         x           = colnames(DF.temp),
         pattern     = "^treecover",
         replacement = ""
         );
+    colnames(DF.temp) <- paste0("hansen.",colnames(DF.temp));
     rownames(DF.temp) <- DF.hansen[,'ZONE_ID'];
 
     DF.temp <- as.data.frame(t(apply(
