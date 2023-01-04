@@ -39,7 +39,7 @@ def export_forest_loss_by_ecozone_year(google_drive_folder,export_target):
                     groupName  = 'lossyear'
                     ),
                 geometry  = feature.geometry(),
-                scale     = 500,
+                scale     = 75, # 100, # 500,
                 maxPixels = 1e10
                 );
 
@@ -139,7 +139,7 @@ def export_treecover2000(google_drive_folder,export_target):
             .reduceRegion(
                 reducer   = ee.Reducer.sum(),
                 geometry  = feature.geometry(),
-                scale     = 500,
+                scale     = 75, # 100, # 500,
                 maxPixels = 1e10
                 );
 
