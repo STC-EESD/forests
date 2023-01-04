@@ -221,7 +221,7 @@ def export_treecover2000(google_drive_folder,export_target):
 def _rescale_area(item):
     areaDict = ee.Dictionary(item);
     classNumber = ee.Number(areaDict.get('lossyear')).format();
-    area = ee.Number(areaDict.get('sum')).divide(1e6).round();
+    area = ee.Number(areaDict.get('sum')).divide(1e6);
     return ee.List([classNumber,area]);
 
 # def maskS2clouds(image):
