@@ -2,12 +2,19 @@
 import ee, os
 
 ##### ##### ##### ##### #####
-def export_forest_loss_by_ecozone_year(google_drive_folder,export_target):
+def export_Hansen_ecozone_year_loss(
+    export_folder,
+    export_fileNamePrefix,
+    export_fileFormat,
+    reduceRegion_scale,
+    reduceRegion_maxPixels
+    ):
 
-    thisFunctionName = "export_forest_loss_by_ecozone_year"
+    thisFunctionName = "export_Hansen_ecozone_year_loss"
     print( "\n\n\n### " + thisFunctionName + "() starts ..." )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    export_target = export_fileNamePrefix + "." + export_fileFormat.lower();
     if ( os.path.exists(export_target) ):
         print( "\n# export target (" + export_target + ") already exists; do nothing ..." );
         print( "\n### " + thisFunctionName + "() exits ..." );
@@ -39,8 +46,8 @@ def export_forest_loss_by_ecozone_year(google_drive_folder,export_target):
                     groupName  = 'lossyear'
                     ),
                 geometry  = feature.geometry(),
-                scale     = 75, # 100, # 500,
-                maxPixels = 1e10
+                scale     = reduceRegion_scale,
+                maxPixels = reduceRegion_maxPixels
                 );
 
         listLossByYear = ee.List(lossByYear.get('groups')).map(_rescale_area);
@@ -82,12 +89,20 @@ def export_forest_loss_by_ecozone_year(google_drive_folder,export_target):
     outputFields = ee.List(leadingPropertyNames).cat(years).getInfo();
     print("outputFields",outputFields);
 
+    # export_task = ee.batch.Export.table.toDrive(
+    #   folder         = 'earthengine/ken',
+    #   collection     =  forestLossByZoneYear,
+    #   description    = 'forest_loss_by_ecozone_year',
+    #   fileNamePrefix = 'forest_loss_by_ecozone_year',
+    #   fileFormat     = 'CSV',
+    #   selectors      = outputFields
+    #   );
     export_task = ee.batch.Export.table.toDrive(
-      folder         = 'earthengine/ken',
-      collection     =  forestLossByZoneYear,
-      description    = 'forest_loss_by_ecozone_year',
-      fileNamePrefix = 'forest_loss_by_ecozone_year',
-      fileFormat     = 'CSV',
+      collection     = forestLossByZoneYear,
+      folder         = export_folder,         # 'earthengine/ken',
+      description    = export_fileNamePrefix, # 'forest_loss_by_ecozone_year',
+      fileNamePrefix = export_fileNamePrefix, # 'forest_loss_by_ecozone_year',
+      fileFormat     = export_fileFormat,     # 'CSV',
       selectors      = outputFields
       );
     export_task.start();
@@ -97,12 +112,19 @@ def export_forest_loss_by_ecozone_year(google_drive_folder,export_target):
     return( None ) # def export_forest_loss_by_ecozone_year():
 
 ##### ##### ##### ##### #####
-def export_treecover2000(google_drive_folder,export_target):
+def export_Hansen_ecozone_treecover2000(
+    export_folder,
+    export_fileNamePrefix,
+    export_fileFormat,
+    reduceRegion_scale,
+    reduceRegion_maxPixels
+    ):
 
-    thisFunctionName = "export_treecover2000"
+    thisFunctionName = "export_Hansen_ecozone_treecover2000"
     print( "\n\n\n### " + thisFunctionName + "() starts ..." )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    export_target = export_fileNamePrefix + "." + export_fileFormat.lower();
     if ( os.path.exists(export_target) ):
         print( "\n# export target (" + export_target + ") already exists; do nothing ..." );
         print( "\n### " + thisFunctionName + "() exits ..." );
@@ -139,8 +161,8 @@ def export_treecover2000(google_drive_folder,export_target):
             .reduceRegion(
                 reducer   = ee.Reducer.sum(),
                 geometry  = feature.geometry(),
-                scale     = 75, # 100, # 500,
-                maxPixels = 1e10
+                scale     = reduceRegion_scale,
+                maxPixels = reduceRegion_maxPixels
                 );
 
         featureAreaTreeCover2000 = featureAreaTreeCover2000.set(
@@ -203,12 +225,20 @@ def export_treecover2000(google_drive_folder,export_target):
       'isWater'
       ];
 
+    # export_task = ee.batch.Export.table.toDrive(
+    #     collection     = treecover2000ByEcozone,
+    #     folder         = google_drive_folder,
+    #     description    = 'treecover2000_area_by_ecozone',
+    #     fileNamePrefix = 'treecover2000_area_by_ecozone',
+    #     fileFormat     = 'CSV',
+    #     selectors      = outputFields
+    #     );
     export_task = ee.batch.Export.table.toDrive(
         collection     = treecover2000ByEcozone,
-        folder         = google_drive_folder,
-        description    = 'treecover2000_area_by_ecozone',
-        fileNamePrefix = 'treecover2000_area_by_ecozone',
-        fileFormat     = 'CSV',
+        folder         = export_folder,
+        description    = export_fileNamePrefix,
+        fileNamePrefix = export_fileNamePrefix,
+        fileFormat     = export_fileFormat,
         selectors      = outputFields
         );
     export_task.start();

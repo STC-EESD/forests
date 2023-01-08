@@ -39,31 +39,36 @@ logging.basicConfig(filename='log.debug',level=logging.DEBUG)
 # import seaborn as sns
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-from test_eeAuthenticate import test_eeAuthenticate
-from test_eeBatchExport  import test_eeBatchExport
-from test_eeHansen       import test_eeHansen
-from hansen              import export_treecover2000
-from hansen              import export_forest_loss_by_ecozone_year
+from wrapper_eeAuthenticate import wrapper_eeAuthenticate
+from hansen import export_Hansen_ecozone_treecover2000
+from hansen import export_Hansen_ecozone_year_loss
+from CanLaD import export_CanLaD_ecozone_year_loss
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-test_eeAuthenticate()
+wrapper_eeAuthenticate()
 
-# test_eeBatchExport(
-#     google_drive_folder = google_drive_folder
-#     )
-
-# test_eeHansen(
-#     google_drive_folder = google_drive_folder
-#     )
-
-export_treecover2000(
-    google_drive_folder = google_drive_folder,
-    export_target       = "treecover2000_area_by_ecozone.csv"
+export_Hansen_ecozone_treecover2000(
+    export_folder          = google_drive_folder,
+    export_fileNamePrefix  = 'Hansen_ecozone_year_treecover2000',
+    export_fileFormat      = 'CSV',
+    reduceRegion_scale     = 500,  # 75, # 100, # 500,
+    reduceRegion_maxPixels = 1e10
     )
 
-export_forest_loss_by_ecozone_year(
-    google_drive_folder = google_drive_folder,
-    export_target       = "forest_loss_by_ecozone_year.csv"
+export_Hansen_ecozone_year_loss(
+    export_folder         = google_drive_folder,
+    export_fileNamePrefix = 'Hansen_ecozone_year_loss',
+    export_fileFormat     = 'CSV',
+    reduceRegion_scale     = 500, # 50, # 75, # 100, # 500,
+    reduceRegion_maxPixels = 1e10 # 2e10
+    )
+
+export_CanLaD_ecozone_year_loss(
+    export_folder          = google_drive_folder,
+    export_fileNamePrefix  = 'CanLaD_ecozone_year_loss',
+    export_fileFormat      = 'CSV',
+    reduceRegion_scale     = 500, # 50, # 75, # 100, # 500,
+    reduceRegion_maxPixels = 1e10 # 2e10
     )
 
 # ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###

@@ -1,9 +1,9 @@
 
 import ee
 
-def test_eeAuthenticate():
+def wrapper_eeAuthenticate():
 
-    thisFunctionName = "test_eeAuthenticate"
+    thisFunctionName = "wrapper_eeAuthenticate"
     print( "\n\n\n### " + thisFunctionName + "() starts ..." )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
