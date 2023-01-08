@@ -48,8 +48,8 @@ cat(paste0("\n# n.cores = ",n.cores,"\n"));
 nfi.data.directory <- file.path(data.directory,"2023-01-02.01");
 
 forest.loss.time.series(
-    CSV.treecover2000  = "treecover2000_area_by_ecozone.csv",
-    CSV.loss.by.year   = "forest_loss_by_ecozone_year.csv",
+    CSV.treecover2000  = "Hansen_ecozone_year_treecover2000.csv",
+    CSV.loss.by.year   = "Hansen_ecozone_year_loss.csv",
     CSV.nfi.landcover  = file.path(nfi.data.directory,"NFI_T1_LC_AREA_en.csv"),
     CSV.nfi.forest     = file.path(nfi.data.directory,"NFI_T4_FOR_AREA_en.csv"),
     CSV.nfi.customized = file.path(nfi.data.directory,"nfi-customized-report-2023-01-02.csv")

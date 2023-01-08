@@ -67,8 +67,9 @@ cat(paste0("\n# n.cores = ",n.cores,"\n"));
 download.from.googledrive(
     google.drive.folder = google.drive.folder,
     patterns = c(
-        "^treecover2000_area_by_ecozone.csv$",
-        "^forest_loss_by_ecozone_year.csv$"
+        "^CanLaD_ecozone_year_loss.csv$",
+        "^Hansen_ecozone_year_loss.csv$",
+        "^Hansen_ecozone_year_treecover2000.csv$"
         )
     );
 
