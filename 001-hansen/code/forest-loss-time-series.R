@@ -34,41 +34,93 @@ forest.loss.time.series <- function(
     cat("\nstr(DF.hansen.nfi)\n");
     print( str(DF.hansen.nfi)   );
 
+    write.csv(
+        x         =  DF.hansen.nfi,
+        file      = "DF-hansen-nfi.csv",
+        row.names = FALSE
+        );
+
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     list.colname.pairs <- list(
         c(
-            colname.hansen    = "hansen.2000",
-            colname.nfi       = "nfi.landcover.treed",
-            colname.nfi.total = "nfi.landcover.total"
+            colname.x   = "nfi.landcover.treed",
+            colname.y   = "hansen.2000",
+            axis.option = 0
             ),
         c(
-            colname.hansen    = "hansen.2000",
-            colname.nfi       = "nfi.forest.forest.land",
-            colname.nfi.total = "nfi.landcover.total"
+            colname.x   = "nfi.forest.forest.land",
+            colname.y   = "hansen.2000",
+            axis.option = 0
             ),
         c(
-            colname.hansen    = "hansen.2017",
-            colname.nfi       = "nfi.landcover.treed",
-            colname.nfi.total = "nfi.landcover.total"
+            colname.x   = "nfi.landcover.treed",
+            colname.y   = "hansen.2017",
+            axis.option = 0
             ),
         c(
-            colname.hansen    = "hansen.2017",
-            colname.nfi       = "nfi.forest.forest.land",
-            colname.nfi.total = "nfi.landcover.total"
+            colname.x   = "nfi.forest.forest.land",
+            colname.y   = "hansen.2017",
+            axis.option = 0
+            ),
+        c(
+            colname.x   = "nfi.landcover.total",
+            colname.y   = "eeAREA",
+            axis.option = 1
+            ),
+        c(
+            colname.x   = "NULL_Land_Water",
+            colname.y   = "eeAREA",
+            axis.option = 1
             )
         );
     DF.colname.pairs <- t(as.data.frame(list.colname.pairs));
     rownames(DF.colname.pairs) <- NULL;
+    DF.colname.pairs[,'axis.option'] <- as.numeric(DF.colname.pairs[,'axis.option']);
 
     for ( row.index in seq(1,nrow(DF.colname.pairs)) ) {
-        forest.loss.time.series_hansen.vs.nfi.standard(
-            DF.input          = DF.hansen.nfi,
-            colname.hansen    = DF.colname.pairs[row.index,'colname.hansen'   ],
-            colname.nfi       = DF.colname.pairs[row.index,'colname.nfi'      ],
-            colname.nfi.total = DF.colname.pairs[row.index,'colname.nfi.total']
-        );
+        forest.loss.time.series_scatterplot(
+            DF.input    = DF.hansen.nfi,
+            colname.x   = DF.colname.pairs[row.index,'colname.x'  ],
+            colname.y   = DF.colname.pairs[row.index,'colname.y'  ],
+            axis.option = DF.colname.pairs[row.index,'axis.option']
+            );
         }
 
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # list.colname.pairs <- list(
+    #     c(
+    #         colname.hansen    = "hansen.2000",
+    #         colname.nfi       = "nfi.landcover.treed",
+    #         colname.nfi.total = "nfi.landcover.total"
+    #         ),
+    #     c(
+    #         colname.hansen    = "hansen.2000",
+    #         colname.nfi       = "nfi.forest.forest.land",
+    #         colname.nfi.total = "nfi.landcover.total"
+    #         ),
+    #     c(
+    #         colname.hansen    = "hansen.2017",
+    #         colname.nfi       = "nfi.landcover.treed",
+    #         colname.nfi.total = "nfi.landcover.total"
+    #         ),
+    #     c(
+    #         colname.hansen    = "hansen.2017",
+    #         colname.nfi       = "nfi.forest.forest.land",
+    #         colname.nfi.total = "nfi.landcover.total"
+    #         )
+    #     );
+    # DF.colname.pairs <- t(as.data.frame(list.colname.pairs));
+    # rownames(DF.colname.pairs) <- NULL;
+    #
+    # for ( row.index in seq(1,nrow(DF.colname.pairs)) ) {
+    #     forest.loss.time.series_hansen.vs.nfi.standard(
+    #         DF.input          = DF.hansen.nfi,
+    #         colname.hansen    = DF.colname.pairs[row.index,'colname.hansen'   ],
+    #         colname.nfi       = DF.colname.pairs[row.index,'colname.nfi'      ],
+    #         colname.nfi.total = DF.colname.pairs[row.index,'colname.nfi.total']
+    #         );
+    #     }
+    #
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     group.01 <- c(
         'Arctic Cordillera',
@@ -127,6 +179,146 @@ forest.loss.time.series <- function(
     }
 
 ##################################################
+forest.loss.time.series_scatterplot <- function(
+    DF.input       = NULL,
+    colname.x      = NULL,
+    colname.y      = NULL,
+    axis.option    = 0,
+    colour.palette = RColorBrewer::brewer.pal(name = "Dark2", n = 8)
+    ) {
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    cat("\nstr(DF.input)\n");
+    print( str(DF.input)   );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    relevant.colnames <- c('ZONE_NAME',colname.x,colname.y);
+    DF.temp           <- DF.input[,relevant.colnames];
+
+    cat("\nstr(DF.temp)\n");
+    print( str(DF.temp)   );
+
+    colnames(DF.temp) <- gsub(
+        x           = colnames(DF.temp),
+        pattern     =  colname.x,
+        replacement = "colname.x"
+        );
+
+    colnames(DF.temp) <- gsub(
+        x           = colnames(DF.temp),
+        pattern     =  colname.y,
+        replacement = "colname.y"
+        );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    my.ggplot <- initializePlot(my.palette = colour.palette);
+
+    my.ggplot <- my.ggplot + geom_abline(
+        slope     = 1,
+        intercept = 0,
+        colour    = "gray"
+        );
+
+    my.ggplot <- my.ggplot + ggplot2::theme(
+        axis.title.x = ggplot2::element_text(size = 50, face = "bold"),
+        axis.title.y = ggplot2::element_text(size = 50, face = "bold"),
+        axis.text.x  = ggplot2::element_text(size = 40, face = "bold"),
+        axis.text.y  = ggplot2::element_text(size = 40, face = "bold")
+        );
+
+    my.ggplot <- my.ggplot + geom_point(
+        data    = DF.temp,
+        mapping = aes(x = colname.x, y = colname.y),
+        colour  = "black",
+        size    = 3.00,
+        alpha   = 0.99
+        );
+
+    is.selected <- grepl(
+        x           = DF.temp[,'ZONE_NAME'],
+        pattern     = "Arctic",
+        ignore.case = TRUE
+        );
+
+    if ( sum(is.selected) > 0 ) {
+        my.ggplot <- my.ggplot + geom_point(
+            data    = DF.temp[is.selected,],
+            mapping = aes(x = colname.x, y = colname.y),
+            colour  = "red",
+            size    = 8.00,
+            alpha   = 0.25
+            );
+        }
+
+    my.ggplot <- my.ggplot + xlab(label = colname.x);
+    my.ggplot <- my.ggplot + ylab(label = colname.y);
+
+    # my.range  <- range(DF.temp[,'year']);
+    # my.min    <- 2 * floor(  min(my.range)/2);
+    # my.max    <- 2 * ceiling(max(my.range)/2);
+    # my.limits <- c(my.min,my.max);
+    # my.breaks <- seq(my.min,my.max,2);
+
+    my.ggplot <- my.ggplot + scale_x_continuous(
+        limits = c(  0,2e6),
+        breaks = seq(0,2e6,0.5e6),
+        labels = scales::scientific
+        );
+
+    my.ggplot <- my.ggplot + scale_y_continuous(
+        limits = c(  0,2e6),
+        breaks = seq(0,2e6,0.5e6),
+        labels = scales::scientific
+        );
+
+    if ( axis.option > 0 ) {
+
+        my.ggplot <- my.ggplot + scale_x_continuous(
+            limits = c(  0,3.0e6),
+            breaks = seq(0,3.0e6,0.5e6),
+            labels = scales::scientific
+            );
+
+        my.ggplot <- my.ggplot + scale_y_continuous(
+            limits = c(  0,3.0e6),
+            breaks = seq(0,3.0e6,0.5e6),
+            labels = scales::scientific
+            );
+
+        }
+
+    # my.ggplot <- my.ggplot + scale_x_continuous(
+    #     limits = c(  0,7),
+    #     breaks = seq(0,7,2)
+    #     );
+    #
+    # my.ggplot <- my.ggplot + scale_y_continuous(
+    #     limits = c(  0,7),
+    #     breaks = seq(0,7,2)
+    #     );
+
+    PNG.output <- paste0(
+        "plot_",
+        gsub(x = colname.x, pattern = "\\.", replacement = "-"),
+        "_vs_",
+        gsub(x = colname.y, pattern = "\\.", replacement = "-"),
+        ".png"
+        );
+
+    ggsave(
+        file   = PNG.output,
+        plot   = my.ggplot,
+        dpi    = 300,
+        height =  16,
+        width  =  17, # 24
+        units  = 'in'
+        );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    return( NULL );
+
+    }
+
 forest.loss.time.series_hansen.vs.nfi.standard <- function(
     DF.input          = NULL,
     colname.hansen    = NULL,
@@ -340,6 +532,12 @@ forest.loss.time.series_cumulative <- function(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     DF.treecover2000 <- read.csv(CSV.treecover2000);
 
+    DF.treecover2000[,'NULL_Land_Water'] <- apply(
+        X      = DF.treecover2000[,c('isNULL','isLand','isWater')],
+        MARGIN = 1,
+        FUN    = sum
+        );
+
     cat("\nstr(DF.treecover2000)\n");
     print( str(DF.treecover2000)   );
 
@@ -447,6 +645,7 @@ forest.loss.time.series_cumulative <- function(
         FUN  = sum
         );
 
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cat("\nstr(DF.hansen.cumulative)\n");
     print( str(DF.hansen.cumulative)   );
 
