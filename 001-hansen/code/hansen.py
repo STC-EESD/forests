@@ -18,7 +18,7 @@ def export_Hansen_ecozone_year_loss(
     if ( os.path.exists(export_target) ):
         print( "\n# export target (" + export_target + ") already exists; do nothing ..." );
         print( "\n### " + thisFunctionName + "() exits ..." );
-        return( None ) # def export_forest_loss_by_ecozone_year():
+        return( 0 ) # def export_forest_loss_by_ecozone_year():
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     ecozones2017 = ee.FeatureCollection("users/paradisepilot/canada/ecozones2017");
@@ -89,14 +89,6 @@ def export_Hansen_ecozone_year_loss(
     outputFields = ee.List(leadingPropertyNames).cat(years).getInfo();
     print("outputFields",outputFields);
 
-    # export_task = ee.batch.Export.table.toDrive(
-    #   folder         = 'earthengine/ken',
-    #   collection     =  forestLossByZoneYear,
-    #   description    = 'forest_loss_by_ecozone_year',
-    #   fileNamePrefix = 'forest_loss_by_ecozone_year',
-    #   fileFormat     = 'CSV',
-    #   selectors      = outputFields
-    #   );
     export_task = ee.batch.Export.table.toDrive(
       collection     = forestLossByZoneYear,
       folder         = export_folder,         # 'earthengine/ken',
@@ -109,7 +101,7 @@ def export_Hansen_ecozone_year_loss(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     print( "\n### " + thisFunctionName + "() exits ..." )
-    return( None ) # def export_forest_loss_by_ecozone_year():
+    return( 1 ) # def export_forest_loss_by_ecozone_year():
 
 ##### ##### ##### ##### #####
 def export_Hansen_ecozone_treecover2000(
@@ -128,7 +120,7 @@ def export_Hansen_ecozone_treecover2000(
     if ( os.path.exists(export_target) ):
         print( "\n# export target (" + export_target + ") already exists; do nothing ..." );
         print( "\n### " + thisFunctionName + "() exits ..." );
-        return( None ) # def export_forest_loss_by_ecozone_year():
+        return( 0 ) # def export_forest_loss_by_ecozone_year():
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     ecozones2017 = ee.FeatureCollection("users/paradisepilot/canada/ecozones2017");
@@ -225,14 +217,6 @@ def export_Hansen_ecozone_treecover2000(
       'isWater'
       ];
 
-    # export_task = ee.batch.Export.table.toDrive(
-    #     collection     = treecover2000ByEcozone,
-    #     folder         = google_drive_folder,
-    #     description    = 'treecover2000_area_by_ecozone',
-    #     fileNamePrefix = 'treecover2000_area_by_ecozone',
-    #     fileFormat     = 'CSV',
-    #     selectors      = outputFields
-    #     );
     export_task = ee.batch.Export.table.toDrive(
         collection     = treecover2000ByEcozone,
         folder         = export_folder,
@@ -245,7 +229,7 @@ def export_Hansen_ecozone_treecover2000(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     print( "\n### " + thisFunctionName + "() exits ..." )
-    return( None ) # def export_treecover2000()
+    return( 1 ) # def export_treecover2000()
 
 ##### ##### ##### ##### #####
 def _rescale_area(item):

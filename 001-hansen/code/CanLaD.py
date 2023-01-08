@@ -18,7 +18,7 @@ def export_CanLaD_ecozone_year_loss(
     if ( os.path.exists(export_target) ):
         print( "\n# export target (" + export_target + ") already exists; do nothing ..." );
         print( "\n### " + thisFunctionName + "() exits ..." );
-        return( None ) # def export_forest_loss_by_ecozone_year():
+        return( 0 ) # def export_forest_loss_by_ecozone_year():
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     ecozones2017 = ee.FeatureCollection("users/paradisepilot/canada/ecozones2017");
@@ -43,18 +43,6 @@ def export_CanLaD_ecozone_year_loss(
                 scale     = reduceRegion_scale,
                 maxPixels = reduceRegion_maxPixels
                 );
-
-        # lossByYear = treecover2000.select('treecover2000').multiply(ee.Image.pixelArea()) \
-        #     .addBands(treecover2000.select('lossyear')) \
-        #     .reduceRegion(
-        #         reducer = ee.Reducer.sum().group(
-        #             groupField = 1,
-        #             groupName  = 'lossyear'
-        #             ),
-        #         geometry  = feature.geometry(),
-        #         scale     = 50, # 75, # 100, # 500,
-        #         maxPixels = 2e10
-        #         );
 
         listLossByYear = ee.List(lossByYear.get('groups')).map(_rescale_area);
         result = ee.Dictionary(listLossByYear.flatten());
@@ -97,17 +85,17 @@ def export_CanLaD_ecozone_year_loss(
 
     export_task = ee.batch.Export.table.toDrive(
       collection     = CanLaDLossByZoneYear,
-      folder         = export_folder,         # 'earthengine/ken',
-      description    = export_fileNamePrefix, # 'forest_loss_by_ecozone_year',
-      fileNamePrefix = export_fileNamePrefix, # 'forest_loss_by_ecozone_year',
-      fileFormat     = export_fileFormat,     # 'CSV',
+      folder         = export_folder,
+      description    = export_fileNamePrefix,
+      fileNamePrefix = export_fileNamePrefix,
+      fileFormat     = export_fileFormat,
       selectors      = outputFields
       );
     export_task.start();
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     print( "\n### " + thisFunctionName + "() exits ..." )
-    return( None ) # def export_forest_loss_by_ecozone_year():
+    return( 1 ) # def export_forest_loss_by_ecozone_year():
 
 ##### ##### ##### ##### #####
 def _rescale_area(item):

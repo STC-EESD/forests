@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os, sys, shutil, getpass
+import os, sys, shutil, getpass, time
 import pprint, logging, datetime
 import stat
 
@@ -47,29 +47,38 @@ from CanLaD import export_CanLaD_ecozone_year_loss
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 wrapper_eeAuthenticate()
 
-export_Hansen_ecozone_treecover2000(
+n_exported_files = 0
+
+return_value = export_Hansen_ecozone_treecover2000(
     export_folder          = google_drive_folder,
     export_fileNamePrefix  = 'Hansen_ecozone_year_treecover2000',
     export_fileFormat      = 'CSV',
     reduceRegion_scale     = 500,  # 75, # 100, # 500,
     reduceRegion_maxPixels = 1e10
     )
+n_exported_files += return_value
 
-export_Hansen_ecozone_year_loss(
+return_value = export_Hansen_ecozone_year_loss(
     export_folder         = google_drive_folder,
     export_fileNamePrefix = 'Hansen_ecozone_year_loss',
     export_fileFormat     = 'CSV',
     reduceRegion_scale     = 500, # 50, # 75, # 100, # 500,
     reduceRegion_maxPixels = 1e10 # 2e10
     )
+n_exported_files += return_value
 
-export_CanLaD_ecozone_year_loss(
+return_value = export_CanLaD_ecozone_year_loss(
     export_folder          = google_drive_folder,
     export_fileNamePrefix  = 'CanLaD_ecozone_year_loss',
     export_fileFormat      = 'CSV',
     reduceRegion_scale     = 500, # 50, # 75, # 100, # 500,
     reduceRegion_maxPixels = 1e10 # 2e10
     )
+n_exported_files += return_value
+
+if ( n_exported_files > 0 ):
+    print("\n\n# number of exported files > 0 ; sleeping ...\n\n")
+    time.sleep(120); # sleep duration in seconds
 
 # ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 
