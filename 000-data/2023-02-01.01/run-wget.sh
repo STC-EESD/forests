@@ -121,8 +121,8 @@ for tempzip in *.zip; do
     echo unzipping: ${tempzip}
     tempstem=`basename ${tempzip} .zip`
     unzip ${tempzip} -d ${tempstem}
-    # sleep 10
-    # rm -f ${tempsip}
+    sleep 5
+    rm -f ${tempsip}
 done
 
 echo
