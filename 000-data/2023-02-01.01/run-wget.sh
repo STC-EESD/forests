@@ -122,7 +122,7 @@ for tempzip in *.zip; do
     tempstem=`basename ${tempzip} .zip`
     unzip ${tempzip} -d ${tempstem}
     sleep 5
-    rm -f ${tempsip}
+    rm -f ${tempzip}
 done
 
 echo
