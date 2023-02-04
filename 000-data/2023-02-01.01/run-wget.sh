@@ -120,13 +120,17 @@ echo
 ### ~~~~~~~~~~ ###
 if [ `uname` != Darwin ]
 then
+    dataRepository=~/minio/standard/shared/randd-eesd/001-data-repository/001-acquired/nfis-change
+    cp $0 ${dataRepository}
     for tempzip in *.zip; do
         echo unzipping: ${tempzip}
         tempstem=`basename ${tempzip} .zip`
         unzip ${tempzip} -d ${tempstem}
         sleep 5
-        mv ${tempstem} ~/minio/standard/shared/randd-eesd/001-data-repository/001-acquired/nfis-change
+        mv ${tempstem} ${dataRepository}
     done
+    sleep 5
+    cp std* ${dataRepository}
 fi
 
 ### ~~~~~~~~~~ ###
