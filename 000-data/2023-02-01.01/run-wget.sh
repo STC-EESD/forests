@@ -109,22 +109,27 @@ SHP_FILES=( \
     "https://opendata.nfis.org/downloads/forest_change/CA_forest_harvest_mask_year_1985_2015.zip"
     )
 
+### ~~~~~~~~~~ ###
 for tempzip in "${SHP_FILES[@]}"
 do
     echo downloading: ${tempzip}
     wget ${tempzip}
 done
-
 echo
 
-for tempzip in *.zip; do
-    echo unzipping: ${tempzip}
-    tempstem=`basename ${tempzip} .zip`
-    unzip ${tempzip} -d ${tempstem}
-    sleep 5
-    rm -f ${tempzip}
-done
+### ~~~~~~~~~~ ###
+if [ `uname` != Darwin ]
+then
+    for tempzip in *.zip; do
+        echo unzipping: ${tempzip}
+        tempstem=`basename ${tempzip} .zip`
+        unzip ${tempzip} -d ${tempstem}
+        sleep 5
+        mv ${tempstem} ~/minio/standard/shared/randd-eesd/001-data-repository/001-acquired/nfis-change
+    done
+fi
 
+### ~~~~~~~~~~ ###
 echo
 echo done
 echo
