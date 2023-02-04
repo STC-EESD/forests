@@ -130,7 +130,9 @@ then
         mv ${tempstem} ${dataRepository}
     done
     sleep 5
-    cp std* ${dataRepository}
+    if compgen -G "std*" > /dev/null; then
+        cp std* ${dataRepository}
+    fi
 fi
 
 ### ~~~~~~~~~~ ###
