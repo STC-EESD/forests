@@ -110,29 +110,40 @@ SHP_FILES=( \
     )
 
 ### ~~~~~~~~~~ ###
-for tempzip in "${SHP_FILES[@]}"
-do
-    echo downloading: ${tempzip}
-    wget ${tempzip}
-done
-echo
+dataRepository=~/minio/standard/shared/randd-eesd/001-data-repository/001-acquired/nfis-change
+if [ `uname` != "Darwin" ]
+then
+    cp $0 ${dataRepository}
+fi
 
 ### ~~~~~~~~~~ ###
-if [ `uname` == "Darwin" ]
-then
-    echo; echo done; echo
-else
-    dataRepository=~/minio/standard/shared/randd-eesd/001-data-repository/001-acquired/nfis-change
-    cp $0 ${dataRepository}
-    for tempzip in *.zip; do
+for tempzip in "${SHP_FILES[@]}"
+do
+
+    echo downloading: ${tempzip}
+    wget ${tempzip}
+    sleep 5
+
+    if [ `uname` != "Darwin" ]
+    then
         echo unzipping: ${tempzip}
         tempstem=`basename ${tempzip} .zip`
         unzip ${tempzip} -d ${tempstem}
         sleep 5
         mv ${tempstem} ${dataRepository}
-    done
-    sleep 5
-    echo; echo done; echo
+        sleep 5
+        rm -f ${tempzip}
+    fi
+
+done
+echo
+
+### ~~~~~~~~~~ ###
+echo; echo done; echo
+
+### ~~~~~~~~~~ ###
+if [ `uname` != "Darwin" ]
+then
     if compgen -G "std*" > /dev/null; then
         cp std* ${dataRepository}
     fi
