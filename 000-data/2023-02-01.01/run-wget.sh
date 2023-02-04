@@ -122,17 +122,18 @@ do
 
     echo downloading: ${tempzip}
     wget ${tempzip}
-    sleep 5
+    sleep 30
 
     if [ `uname` != "Darwin" ]
     then
         echo unzipping: ${tempzip}
         tempstem=`basename ${tempzip} .zip`
         unzip ${tempzip} -d ${tempstem}
-        sleep 5
+        sleep 30
         mv ${tempstem} ${dataRepository}
-        sleep 5
+        sleep 30
         rm -f ${tempzip}
+        sleep 30
     fi
 
 done
