@@ -120,7 +120,7 @@ fi
 for tempzip in "${SHP_FILES[@]}"
 do
 
-    echo downloading: ${tempzip}
+    echo;echo downloading: ${tempzip}
     wget ${tempzip}
     sleep 5
 
@@ -128,11 +128,16 @@ do
     then
         tempstem=`basename ${tempzip} .zip`
         tempzip=${tempstem}.zip
+
         echo unzipping: ${tempzip}
         unzip ${tempzip} -d ${tempstem}
         sleep 5
+
+        echo moving ${tempstem} to ${dataRepository}
         mv ${tempstem} ${dataRepository}
         sleep 5
+
+        echo deleting ${tempzip}
         rm -f ${tempzip}
         sleep 5
     fi
