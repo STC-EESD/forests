@@ -118,8 +118,10 @@ done
 echo
 
 ### ~~~~~~~~~~ ###
-if [ `uname` != Darwin ]
+if [ `uname` == "Darwin" ]
 then
+    echo; echo done; echo
+else
     dataRepository=~/minio/standard/shared/randd-eesd/001-data-repository/001-acquired/nfis-change
     cp $0 ${dataRepository}
     for tempzip in *.zip; do
@@ -130,12 +132,8 @@ then
         mv ${tempstem} ${dataRepository}
     done
     sleep 5
+    echo; echo done; echo
     if compgen -G "std*" > /dev/null; then
         cp std* ${dataRepository}
     fi
 fi
-
-### ~~~~~~~~~~ ###
-echo
-echo done
-echo
