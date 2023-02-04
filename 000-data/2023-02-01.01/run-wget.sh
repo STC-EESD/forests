@@ -126,8 +126,9 @@ do
 
     if [ `uname` != "Darwin" ]
     then
-        echo unzipping: ${tempzip}
         tempstem=`basename ${tempzip} .zip`
+        tempzip=${tempstem}.zip
+        echo unzipping: ${tempzip}
         unzip ${tempzip} -d ${tempstem}
         sleep 30
         mv ${tempstem} ${dataRepository}
