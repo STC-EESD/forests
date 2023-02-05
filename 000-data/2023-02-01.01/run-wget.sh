@@ -134,11 +134,11 @@ do
         sleep 5
 
         echo moving ${tempstem} to ${dataRepository}
-        mv ${tempstem} ${dataRepository}
+        cp -r ${tempstem} ${dataRepository}
         sleep 5
 
         echo deleting ${tempzip}
-        rm -f ${tempzip}
+        rm -f ${tempzip} ${tempstem}
         sleep 5
     fi
 
