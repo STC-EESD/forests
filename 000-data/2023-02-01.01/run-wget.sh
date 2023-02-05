@@ -133,11 +133,11 @@ do
         unzip ${tempzip} -d ${tempstem}
         sleep 5
 
-        echo moving ${tempstem} to ${dataRepository}
+        echo copying ${tempstem} to ${dataRepository}
         cp -r ${tempstem} ${dataRepository}
         sleep 5
 
-        echo deleting ${tempzip}
+        echo deleting ${tempzip} ${tempstem}
         rm -f ${tempzip} ${tempstem}
         sleep 5
     fi
