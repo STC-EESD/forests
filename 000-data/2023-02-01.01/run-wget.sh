@@ -138,7 +138,7 @@ do
         sleep 5
 
         echo deleting ${tempzip} ${tempstem}
-        rm -f ${tempzip} ${tempstem}
+        rm -rf ${tempzip} ${tempstem}
         sleep 5
     fi
 
