@@ -138,8 +138,8 @@ do
         mc-original cp --recursive ${tempstem} ${dataRepository}
         sleep 5
 
-        echo deleting ${tempzip} ${tempstem}
-        rm -rf ${tempzip} ${tempstem}
+        echo deleting ${tempstem}
+        rm -rf ${tempstem}
         sleep 5
     fi
 
