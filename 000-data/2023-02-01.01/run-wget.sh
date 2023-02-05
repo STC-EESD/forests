@@ -133,8 +133,9 @@ do
         unzip ${tempzip} -d ${tempstem}
         sleep 5
 
+        # Copy multiple local folders recursively to MinIO cloud storage.
         echo copying ${tempstem} to ${dataRepository}
-        cp -r ${tempstem} ${dataRepository}
+        mc-original cp --recursive ${tempstem} ${dataRepository}
         sleep 5
 
         echo deleting ${tempzip} ${tempstem}
